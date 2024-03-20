@@ -20,7 +20,15 @@ def emotion_detector(text_to_analyze):
 
     try:
         response = requests.post(url, json=myobj, headers=headers, timeout=10)
-        response.raise_for_status()
+
+        emotion_dict = {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
 
         if response.status_code == 200:
             formatted_response = json.loads(response.text)
@@ -37,18 +45,12 @@ def emotion_detector(text_to_analyze):
             return emotion_dict
 
         elif response.status_code == 400:
-            emotion_dict = {
-                'anger': None,
-                'disgust': None,
-                'fear': None,
-                'joy': None,
-                'sadness': None,
-                'dominant_emotion': None
-            }
             return emotion_dict
-            
+
         elif response.status_code == 500:
-            return None      
+            print("Something went wrong")
+            return emotion_dict
+                  
     except requests.exceptions.RequestException as e:
         print(f"An error occurred: {e}")
         return None
